@@ -2,10 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Mail, Phone, Building2, Briefcase } from "lucide-react"
-import type { Candidate } from "@/lib/api"
+import type { CandidateRecord } from "@/lib/candidate-store"
 
 interface ProfileTabProps {
-  candidate: Candidate
+  candidate: CandidateRecord
 }
 
 export function ProfileTab({ candidate }: ProfileTabProps) {
@@ -36,7 +36,7 @@ export function ProfileTab({ candidate }: ProfileTabProps) {
               </div>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
-                  {candidate.status || "pending"}
+                  {candidate.status || "scheduled"}
                 </Badge>
                 <Badge variant="outline">{companyDept}</Badge>
               </div>

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { MessageSquare, ThumbsUp, Eye, Plus } from "lucide-react"
-import type { Feedback } from "@/lib/api"
+import type { FeedbackRecord } from "@/lib/feedback-store"
 import { listFeedbackByCandidate } from "@/lib/feedback-store"
 import { useAuth } from "@/contexts/auth-context"
 
@@ -16,14 +16,14 @@ interface FeedbackTabProps {
 
 export function FeedbackTab({ candidateId, onSubmitFeedback }: FeedbackTabProps) {
   const { user } = useAuth()
-  const [feedbacks, setFeedbacks] = useState<Feedback[]>([])
+  const [feedbacks, setFeedbacks] = useState<FeedbackRecord[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadFeedback = async () => {
       try {
         setLoading(true)
-        const posts = listFeedbackByCandidate(candidateId) as unknown as Feedback[]
+        const posts = listFeedbackByCandidate(candidateId)
         setFeedbacks(posts)
       } catch (error) {
         console.error("[v0] Failed to load feedback:", error)

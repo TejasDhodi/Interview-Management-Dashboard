@@ -10,7 +10,7 @@ import { ProfileTab } from "@/components/candidates/profile-tab"
 import { ScheduleTab } from "@/components/candidates/schedule-tab"
 import { FeedbackTab } from "@/components/candidates/feedback-tab"
 import { ArrowLeft } from "lucide-react"
-import type { Candidate } from "@/lib/api"
+import type { CandidateRecord } from "@/lib/candidate-store"
 import { getCandidate } from "@/lib/candidate-store"
 
 export default function CandidateDetailPage() {
@@ -18,7 +18,7 @@ export default function CandidateDetailPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const params = useParams<{ id: string }>()
-  const [candidate, setCandidate] = useState<Candidate | null>(null)
+  const [candidate, setCandidate] = useState<CandidateRecord | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "profile")
 
@@ -32,12 +32,9 @@ export default function CandidateDetailPage() {
     const loadCandidate = async () => {
       try {
         setLoading(true)
-        const found = getCandidate(Number(params.id)) as unknown as Candidate | undefined
+        const found = getCandidate(Number(params.id))
         if (!found) throw new Error("not found")
-        setCandidate({
-          ...found,
-          status: (found.status as any) ?? "scheduled",
-        })
+        setCandidate(found)
       } catch (error) {
         console.error("[v0] Failed to load candidate:", error)
       } finally {
