@@ -120,11 +120,4 @@ localStorage.removeItem('user');
 ```js
 localStorage.removeItem('user');
 ```
-- **Stale Data**: Refresh the page after major changes
 
-## Architecture Notes
-- **Pure Frontend**: No backend/API routes (removed `src/app/api`)
-- **localStorage Persistence**: All data persists across browser sessions
-- **Real-time Updates**: Dashboard metrics update based on actual data
-- **Role-based UI**: Different capabilities based on user role
-- **Optimistic Updates**: UI updates immediately, reverts on failure
