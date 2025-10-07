@@ -199,14 +199,15 @@ export function CandidateTable({ candidates }: CandidateTableProps) {
                             company: candidate.company,
                           }}
                           onUpdated={() => {
-                            // simple approach: reload the page data
-                            router.refresh?.()
+                            // Force refresh by reloading the page
+                            window.location.reload()
                           }}
                         />
                         <CandidateDeleteButton
                           id={candidate.id}
                           onDeleted={() => {
-                            router.refresh?.()
+                            // Force refresh by reloading the page
+                            window.location.reload()
                           }}
                         />
                       </>

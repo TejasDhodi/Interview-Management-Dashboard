@@ -30,7 +30,11 @@ function hydrate() {
 
 export function listCandidates(): CandidateRecord[] {
   hydrate()
-  return [...inMemory]
+  // Remove duplicates by ID (keep first occurrence)
+  const unique = inMemory.filter((candidate, index, self) => 
+    index === self.findIndex(c => c.id === candidate.id)
+  )
+  return [...unique]
 }
 
 export function getCandidate(id: number): CandidateRecord | undefined {
@@ -40,7 +44,18 @@ export function getCandidate(id: number): CandidateRecord | undefined {
 
 export function createCandidate(data: Omit<CandidateRecord, "id" | "status"> & { status?: CandidateStatus }): CandidateRecord {
   hydrate()
+  
+  // Ensure unique ID by finding the highest existing ID
+  const maxId = inMemory.length > 0 ? Math.max(...inMemory.map(c => c.id)) : lastId
+  lastId = Math.max(lastId, maxId)
+  
   const record: CandidateRecord = { id: ++lastId, status: data.status ?? "scheduled", ...data }
+  
+  // Check if ID already exists and increment if needed
+  while (inMemory.some(c => c.id === record.id)) {
+    record.id = ++lastId
+  }
+  
   inMemory.unshift(record)
   writeToLocalStorage(LS_KEY, inMemory)
   return record

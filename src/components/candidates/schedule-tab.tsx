@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, CheckCircle2, Circle } from "lucide-react"
 import type { Interview } from "@/lib/api"
 import { listInterviewsByCandidate, updateInterview, createInterview } from "@/lib/interview-store"
-import { getCandidate } from "@/lib/candidate-store"
+import { getCandidate, updateCandidate } from "@/lib/candidate-store"
 import { Switch } from "@/components/ui/switch"
 
 interface ScheduleTabProps {
@@ -44,6 +44,25 @@ export function ScheduleTab({ candidateId }: ScheduleTabProps) {
     try {
       const updated = updateInterview(candidateId, interviewId, { completed: next })
       if (!updated) throw new Error("Failed to update interview")
+      
+      // Update candidate status based on interview completion
+      const candidate = getCandidate(candidateId)
+      if (candidate) {
+        const allInterviews = listInterviewsByCandidate(candidateId)
+        const allCompleted = allInterviews.todos.every(i => i.completed)
+        const anyCompleted = allInterviews.todos.some(i => i.completed)
+        
+        let newStatus = candidate.status
+        if (allCompleted && allInterviews.todos.length > 0) {
+          newStatus = "completed"
+        } else if (anyCompleted) {
+          newStatus = "scheduled" // Keep as scheduled if some are done but not all
+        }
+        
+        if (newStatus !== candidate.status) {
+          updateCandidate(candidateId, { status: newStatus })
+        }
+      }
     } catch (e) {
       // revert on failure
       setInterviews((prev) => prev.map((i) => (i.id === interviewId ? { ...i, completed: !next } : i)))

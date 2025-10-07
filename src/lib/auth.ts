@@ -40,14 +40,14 @@ export async function login(username: string, password: string): Promise<AuthRes
 }
 
 export function saveSession(user: User): void {
-  // Store user data securely in sessionStorage (cleared on tab close)
-  sessionStorage.setItem("user", JSON.stringify(user))
+  // Store user data in localStorage for persistence across sessions
+  localStorage.setItem("user", JSON.stringify(user))
 }
 
 export function getSession(): User | null {
   if (typeof window === "undefined") return null
 
-  const userStr = sessionStorage.getItem("user")
+  const userStr = localStorage.getItem("user")
   if (!userStr) return null
 
   try {
@@ -58,7 +58,7 @@ export function getSession(): User | null {
 }
 
 export function clearSession(): void {
-  sessionStorage.removeItem("user")
+  localStorage.removeItem("user")
 }
 
 export function hasPermission(userRole: UserRole, requiredRole: UserRole | UserRole[]): boolean {

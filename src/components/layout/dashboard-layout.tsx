@@ -77,7 +77,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </header>
 
       {/* Main Content */}
-      <main className="container px-4 py-6 md:px-6 md:py-8">{children}</main>
+      <main className="px-4 py-6 md:px-6 md:py-8">{children}</main>
     </div>
   )
 }
